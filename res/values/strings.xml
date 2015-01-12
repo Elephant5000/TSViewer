@@ -2,4 +2,7 @@
 <resources>
     <string name="app_name">TSViewer</string>
     <string name="title">TSViewer</string>
+    <string name="settings">Setting</string>
+    <string name="notifications">Notifications</string>
+    <string name="filters">Filters</string>
 </resources>

@@ -3,12 +3,13 @@
           package="com.trackstudio.viewer"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="9"
+    <uses-sdk android:minSdkVersion="11"
               android:maxSdkVersion="21"
               android:targetSdkVersion="21"/>
     <application android:label="@string/app_name"
                  android:icon="@drawable/ic_launcher"
-                 android:allowBackup="true">
+                 android:allowBackup="true"
+                 android:theme="@android:style/Theme.Holo.Light">
         <activity android:name="TSViewer"
                   android:label="@string/app_name">
             <intent-filter>
