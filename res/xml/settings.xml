@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <EditTextPreference
+        android:key="username"
+        android:summary="@string/username"
+        android:title="@string/username" />
+    <EditTextPreference
+        android:inputType="textPassword"
+        android:title="@string/password"
+        android:key="password"
+        android:summary="@string/password" />
+    <EditTextPreference
+        android:key="url"
+        android:summary="@string/url"
+        android:title="@string/url" />
+    <EditTextPreference
+        android:key="period"
+        android:summary="@string/period"
+        android:title="@string/period" />
+</PreferenceScreen>

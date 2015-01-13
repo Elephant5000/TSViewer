@@ -2,7 +2,11 @@
 <resources>
     <string name="app_name">TSViewer</string>
     <string name="title">TSViewer</string>
-    <string name="settings">Setting</string>
+    <string name="settings">Settings</string>
     <string name="notifications">Notifications</string>
     <string name="filters">Filters</string>
+    <string name="username">Root</string>
+    <string name="password">Password</string>
+    <string name="url">URL</string>
+    <string name="period">Period</string>
 </resources>

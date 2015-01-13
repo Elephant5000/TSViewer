@@ -1,6 +1,7 @@
 package com.trackstudio.viewer.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -34,6 +35,12 @@ public class TSViewer extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(final MenuItem item) {
-        return true;
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivity(new Intent(this, Settings.class));
+                return true;
+            default:
+                return false;
+        }
     }
 }

@@ -19,5 +19,10 @@
         </activity>
 
         <activity android:name=".activities.DetailsTask"/>
+
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/settings">
+        </activity>
     </application>
 </manifest>
