@@ -6,13 +6,17 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.models.TaskItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Tasks service updater.
@@ -26,7 +30,7 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
     /**
      * URL Pattern.
      */
-    private final static String URL_PATTERN =  "%s/task/tasks/80158?filter=%s&login=%s&password=%s";
+    private final static String URL_PATTERN =  "%s/task/tasks/%s?filter=%s&login=%s&password=%s";
 
     /**
      * Tasks fetcher.
@@ -48,14 +52,19 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
      * @param activity Activity
      * @param adapter Adapter
      * @param storage Storage
+     * @param filter Filter
      */
-    public TasksUpdater(Activity activity, ArrayAdapter adapter, List<TaskItem> storage) {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-        String username = prefs.getString("username", "");
-        String password = prefs.getString("password", "");
-        String url = prefs.getString("url", "");
+    public TasksUpdater(Activity activity, ArrayAdapter adapter, List<TaskItem> storage, String filter) {
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         this.fetcher = new Fetcher<TaskItem>(
-            String.format(URL_PATTERN, url, "All", username, password),
+            String.format(
+                URL_PATTERN,
+                prefs.getString("url", ""),
+                prefs.getString("parent_task", ""),
+                filter,
+                prefs.getString("username", ""),
+                prefs.getString("password", "")
+            ),
             this
         );
         this.storage = storage;
@@ -80,13 +89,14 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
         final List<TaskItem> list = new ArrayList<TaskItem>();
         try {
             final JSONArray array = new JSONArray(json);
+            final SimpleDateFormat sdf = new SimpleDateFormat(Constrains.TIME_FORMAT, Locale.US);
             for (int index=0;index!=array.length();++index) {
                 final JSONObject task = array.getJSONObject(index);
                 list.add(
                     new TaskItem(
                         task.getString("submitterName"),
                         task.getString("name"),
-                        new Date(task.getLong("submitdate")).toString(),
+                        sdf.format(new Date(task.getLong("submitdate"))),
                         task.getString("number")
                     )
                 );

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.services.DetailsUpdater;
@@ -44,10 +45,20 @@ public class DetailsFragment extends Fragment {
      * Updates the views.
      * @param number selected task
      */
-    public void updateView(String number) {
-        new DetailsUpdater(
-            this.name,
-            this.description
-        ).execute();
+    public void updateView(final String number) {
+        if (number != null && !number.isEmpty()) {
+            new DetailsUpdater(
+                getActivity(),
+                this.name,
+                this.description,
+                number
+            ).execute();
+        } else {
+            Toast.makeText(
+                getActivity(),
+                "Please select task!",
+                Toast.LENGTH_SHORT
+            ).show();
+        }
     }
 }

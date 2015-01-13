@@ -10,6 +10,7 @@ import android.widget.ListView;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.activities.TSViewer;
 import com.trackstudio.viewer.adapters.FilterList;
+import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.models.FilterItem;
 import com.trackstudio.viewer.services.FiltersUpdater;
 import java.util.ArrayList;
@@ -51,12 +52,19 @@ public class FiltersFragment extends ListFragment {
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
-        TasksFragment fragment = (TasksFragment) this.getFragmentManager().findFragmentById(R.id.fragment_tasks);
+        final TasksFragment fragment = (TasksFragment) this.getFragmentManager().findFragmentById(R.id.fragment_tasks);
+        final String filter = this.list.get(position-1).getName();
         if (fragment != null && fragment.isVisible()) {
-            fragment.update(id);
+            fragment.updateUI(filter);
         } else {
             this.startActivity(
-                new Intent(this.getActivity(), TSViewer.class)
+                new Intent(
+                    this.getActivity(),
+                    TSViewer.class
+                ).putExtra(
+                    Constrains.FILTER,
+                    filter
+                )
             );
         }
     }
@@ -66,6 +74,7 @@ public class FiltersFragment extends ListFragment {
      */
     private void updateUI() {
         new FiltersUpdater(
+            getActivity(),
             (ArrayAdapter) getListAdapter(),
             list
         ).execute();

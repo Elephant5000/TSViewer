@@ -17,4 +17,8 @@
         android:key="period"
         android:summary="@string/period"
         android:title="@string/period" />
+    <EditTextPreference
+        android:key="parent_task"
+        android:summary="@string/parent_task"
+        android:title="@string/parent_task" />
 </PreferenceScreen>

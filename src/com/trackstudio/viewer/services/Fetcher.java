@@ -1,7 +1,6 @@
 package com.trackstudio.viewer.services;
 
 import android.util.Log;
-
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;

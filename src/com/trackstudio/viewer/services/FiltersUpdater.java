@@ -1,12 +1,14 @@
 package com.trackstudio.viewer.services;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import com.trackstudio.viewer.models.FilterItem;
 import org.json.JSONArray;
 import org.json.JSONException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,13 +21,12 @@ public class FiltersUpdater extends AsyncTask<String, Void, List<FilterItem>> im
      */
     private final static String TAG = FiltersUpdater.class.getSimpleName();
 
+    private final static String URL_PATTER = "%s/task/filter/%s?login=%s&password=%s";
+
     /**
      * Filter fetcher.
      */
-    private final Fetcher<FilterItem> fetcher = new Fetcher<FilterItem>(
-        "http://192.168.0.100:8888/TrackStudio/rest/task/filter/95?login=root&password=root",
-        this
-    );
+    private final Fetcher<FilterItem> fetcher;
 
     /**
      * Storage of filter item.
@@ -41,9 +42,20 @@ public class FiltersUpdater extends AsyncTask<String, Void, List<FilterItem>> im
      * Default constructor.
      * @param storage List of filters
      */
-    public FiltersUpdater(ArrayAdapter adapter, List<FilterItem> storage) {
+    public FiltersUpdater(Activity activity, ArrayAdapter adapter, List<FilterItem> storage) {
         this.adapter = adapter;
         this.storage = storage;
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        this.fetcher = new Fetcher<FilterItem>(
+            String.format(
+                URL_PATTER,
+                prefs.getString("url", ""),
+                prefs.getString("parent_task", ""),
+                prefs.getString("username", ""),
+                prefs.getString("password", "")
+            ),
+            this
+        );
     }
 
     @Override
