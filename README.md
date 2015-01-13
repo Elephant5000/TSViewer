@@ -2,8 +2,23 @@
 It is the android client for TrackStudio system
 
 The app has the 5 screens.
-1. List of tasks
-2. Details of task
-3. List of filters
-4. List of notifications
-5. Settings
+
+- List of tasks
+
+![ScreenShot](images/tasks.png)
+
+- Details of task
+
+![ScreenShot](images/details.png)
+
+- List of filters
+
+![ScreenShot](images/filters.png)
+
+- List of notifications
+
+![ScreenShot](images/notifications.png)
+
+- Settings
+
+![ScreenShot](images/settings.png)
