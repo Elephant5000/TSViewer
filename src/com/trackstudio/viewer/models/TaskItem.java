@@ -20,15 +20,22 @@ public class TaskItem {
     private final String submitDate;
 
     /**
+     * Number.
+     */
+    private final String number;
+
+    /**
      * Default constructor.
      * @param submitter Submitter
      * @param taskName Task name
      * @param submitDate Submit date
+     * @param number Number
      */
-    public TaskItem(String submitter, String taskName, String submitDate) {
+    public TaskItem(String submitter, String taskName, String submitDate, String number) {
         this.submitter = submitter;
         this.taskName = taskName;
         this.submitDate = submitDate;
+        this.number = number;
     }
 
     /**
@@ -53,5 +60,13 @@ public class TaskItem {
      */
     public String getSubmitDate() {
         return this.submitDate;
+    }
+
+    /**
+     * Get Number.
+     * @return Number
+     */
+    public String getNumber() {
+        return this.number;
     }
 }

@@ -68,7 +68,9 @@ public class TaskList extends ArrayAdapter<TaskItem> {
         final TaskItem item = this.getItem(position);
         viewHolder.submitter.setText(item.getSubmitter());
         viewHolder.submitDate.setText(item.getSubmitDate());
-        viewHolder.taskName.setText(item.getTaskName());
+        viewHolder.taskName.setText(
+            String.format("%s [#%s]", item.getTaskName(), item.getNumber())
+        );
     }
 
 
