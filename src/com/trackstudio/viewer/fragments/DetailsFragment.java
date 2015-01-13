@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.trackstudio.viewer.R;
+import com.trackstudio.viewer.models.Constrains;
+import com.trackstudio.viewer.services.DetailsUpdater;
 
 /**
  * The details of task - fragment.
@@ -21,7 +23,7 @@ public class DetailsFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(
-            R.layout.details_fragment, null, false
+            R.layout.details_fragment, container, false
         );
         this.name = (TextView) view.findViewById(R.id.task_name);
         this.description = (TextView) view.findViewById(R.id.description);
@@ -31,15 +33,21 @@ public class DetailsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        this.updateView(1L);
+        this.updateView(
+            getActivity()
+                .getIntent()
+                .getStringExtra(Constrains.TASK_NUMBER)
+        );
     }
 
     /**
      * Updates the views.
-     * @param id selected task
+     * @param number selected task
      */
-    public void updateView(long id) {
-        this.name.setText("Task #1");
-        this.description.setText("Description of task");
+    public void updateView(String number) {
+        new DetailsUpdater(
+            this.name,
+            this.description
+        ).execute();
     }
 }

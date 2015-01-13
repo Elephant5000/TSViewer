@@ -11,6 +11,7 @@ import android.widget.ListView;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.adapters.TaskList;
 import com.trackstudio.viewer.activities.DetailsTask;
+import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.models.TaskItem;
 import com.trackstudio.viewer.services.TasksUpdater;
 import java.util.ArrayList;
@@ -57,11 +58,16 @@ public class TasksFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         DetailsFragment fragment = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_fragment);
+        final String number = this.list.get(position-1).getNumber();
         if (fragment != null && fragment.isVisible()) {
-            fragment.updateView(id);
+            fragment.updateView(number);
         } else {
             startActivity(
                 new Intent(getActivity(), DetailsTask.class)
+                    .putExtra(
+                        Constrains.TASK_NUMBER,
+                        number
+                    )
             );
         }
     }
@@ -79,6 +85,7 @@ public class TasksFragment extends ListFragment {
      */
     public void updateUI() {
         new TasksUpdater(
+            getActivity(),
             (ArrayAdapter) this.getListAdapter(),
             this.list
         ).execute();

@@ -1,6 +1,9 @@
 package com.trackstudio.viewer.services;
 
+import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import com.trackstudio.viewer.models.TaskItem;
@@ -21,12 +24,14 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
     private final static String TAG = TasksUpdater.class.getSimpleName();
 
     /**
+     * URL Pattern.
+     */
+    private final static String URL_PATTERN =  "%s/task/tasks/80158?filter=%s&login=%s&password=%s";
+
+    /**
      * Tasks fetcher.
      */
-    private final Fetcher<TaskItem> fetcher = new Fetcher<TaskItem>(
-        "http://192.168.0.100:8888/TrackStudio/rest/task/tasks/95?filter=All%20tasks&login=root&password=root",
-        this
-    );
+    private final Fetcher<TaskItem> fetcher;
 
     /**
      * Storage of tasks item.
@@ -40,10 +45,19 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
 
     /**
      * Default constructor.
+     * @param activity Activity
      * @param adapter Adapter
      * @param storage Storage
      */
-    public TasksUpdater(ArrayAdapter adapter, List<TaskItem> storage) {
+    public TasksUpdater(Activity activity, ArrayAdapter adapter, List<TaskItem> storage) {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        String username = prefs.getString("username", "");
+        String password = prefs.getString("password", "");
+        String url = prefs.getString("url", "");
+        this.fetcher = new Fetcher<TaskItem>(
+            String.format(URL_PATTERN, url, "All", username, password),
+            this
+        );
         this.storage = storage;
         this.adapter = adapter;
     }
