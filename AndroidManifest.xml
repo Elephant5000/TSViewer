@@ -29,5 +29,10 @@
             android:name=".activities.Filters"
             android:label="@string/filters">
         </activity>
+        
+        <activity
+            android:name=".activities.Notifications"
+            android:label="@string/notifications">
+        </activity>
     </application>
 </manifest>

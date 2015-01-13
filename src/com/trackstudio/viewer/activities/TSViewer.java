@@ -42,6 +42,9 @@ public class TSViewer extends Activity {
             case R.id.filters:
                 this.startActivity(new Intent(this, Filters.class));
                 return true;
+            case R.id.notifications:
+                this.startActivity(new Intent(this, Notifications.class));
+                return true;
             default:
                 return false;
         }
