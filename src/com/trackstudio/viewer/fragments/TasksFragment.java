@@ -1,8 +1,13 @@
 package com.trackstudio.viewer.fragments;
 
 import android.app.ListFragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
+import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.adapters.TaskList;
+import com.trackstudio.viewer.activities.DetailsTask;
 import com.trackstudio.viewer.models.TaskItem;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,6 +24,17 @@ public class TasksFragment extends ListFragment {
         setListAdapter(
             new TaskList(this.getActivity(), this.load())
         );
+    }
+
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        DetailsFragment fragment = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_fragment);
+        if (fragment != null && fragment.isVisible()) {
+            fragment.updateView(id);
+        } else {
+            startActivity(
+                new Intent(getActivity(), DetailsTask.class)
+            );
+        }
     }
 
     /**

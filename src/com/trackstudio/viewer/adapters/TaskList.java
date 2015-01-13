@@ -27,7 +27,7 @@ public class TaskList extends ArrayAdapter<TaskItem> {
      * @param items Items
      */
     public TaskList(final Activity context, final List<TaskItem> items) {
-        super(context, R.layout.list_tasks, items);
+        super(context, R.layout.tasks_fragment, items);
         this.context = context;
     }
 
@@ -36,7 +36,7 @@ public class TaskList extends ArrayAdapter<TaskItem> {
         ViewHolder viewHolder;
         if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(this.context);
-            convertView = inflater.inflate(R.layout.list_tasks, parent, false);
+            convertView = inflater.inflate(R.layout.tasks_fragment, parent, false);
             viewHolder = this.initConvertView(convertView);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
