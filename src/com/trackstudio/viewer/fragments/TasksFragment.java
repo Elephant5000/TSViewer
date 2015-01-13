@@ -49,4 +49,11 @@ public class TasksFragment extends ListFragment {
         list.add(new TaskItem("Peter Arsentev", "Task #3", submitDate));
         return list;
     }
+
+    /**
+     * Reload the list of tasks by selected filter.
+     * @param filterId Selected filter
+     */
+    public void update(final long filterId) {
+    }
 }

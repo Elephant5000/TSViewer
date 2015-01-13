@@ -14,10 +14,10 @@ import com.trackstudio.viewer.fragments.TasksFragment;
 public class TSViewer extends Activity {
     @Override
     protected void onCreate(final Bundle bundle) {
-        super. onCreate(bundle);
+        super.onCreate(bundle);
         if (bundle == null) {
             TasksFragment fragment = new TasksFragment();
-            getFragmentManager()
+            this.getFragmentManager()
                 .beginTransaction()
                 .add(
                     android.R.id.content, fragment,
@@ -29,7 +29,7 @@ public class TSViewer extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        this.getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -37,7 +37,10 @@ public class TSViewer extends Activity {
     public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings:
-                startActivity(new Intent(this, Settings.class));
+                this.startActivity(new Intent(this, Settings.class));
+                return true;
+            case R.id.filters:
+                this.startActivity(new Intent(this, Filters.class));
                 return true;
             default:
                 return false;

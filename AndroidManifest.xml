@@ -24,5 +24,10 @@
             android:name=".activities.Settings"
             android:label="@string/settings">
         </activity>
+
+        <activity
+            android:name=".activities.Filters"
+            android:label="@string/filters">
+        </activity>
     </application>
 </manifest>
