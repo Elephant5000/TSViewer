@@ -3,7 +3,6 @@ package com.trackstudio.viewer.services;
 import android.os.AsyncTask;
 import android.util.Log;
 import com.trackstudio.viewer.models.TaskItem;
-import org.json.JSONObject;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class TasksUpdater extends AsyncTask<String, Void, String> implements Ite
     }
 
     @Override
-    public List<TaskItem> parse(JSONObject json) {
+    public List<TaskItem> parse(String json) {
         return Collections.emptyList();
     }
 }

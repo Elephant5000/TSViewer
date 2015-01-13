@@ -4,12 +4,14 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.activities.TSViewer;
 import com.trackstudio.viewer.adapters.FilterList;
 import com.trackstudio.viewer.models.FilterItem;
-
+import com.trackstudio.viewer.services.FiltersUpdater;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,13 +19,34 @@ import java.util.List;
  * Filters fragments.
  */
 public class FiltersFragment extends ListFragment {
+    /**
+     * Storage filters
+     */
+    private final List<FilterItem> list = new ArrayList<FilterItem>();
 
     @Override
     public void onCreate(final Bundle icicle) {
         super.onCreate(icicle);
         this.setListAdapter(
-            new FilterList(this.getActivity(), this.load())
+            new FilterList(this.getActivity(), this.list)
         );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Button refresh = new Button(getActivity());
+        refresh.setText("Refresh");
+        refresh.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FiltersFragment.this.updateUI();
+                }
+            }
+        );
+        getListView().addHeaderView(refresh);
+        this.updateUI();
     }
 
     @Override
@@ -39,14 +62,12 @@ public class FiltersFragment extends ListFragment {
     }
 
     /**
-     * The stub for filters.
-     * @return list of filters
+     * Updates the UI by Async thread.
      */
-    private List<FilterItem> load() {
-        final List<FilterItem> list = new ArrayList<FilterItem>();
-        list.add(new FilterItem("1", "Filter #1"));
-        list.add(new FilterItem("2", "Filter #2"));
-        list.add(new FilterItem("3", "Filter #3"));
-        return list;
+    private void updateUI() {
+        new FiltersUpdater(
+            (ArrayAdapter) getListAdapter(),
+            list
+        ).execute();
     }
 }

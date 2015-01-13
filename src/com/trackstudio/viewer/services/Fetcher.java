@@ -1,8 +1,7 @@
 package com.trackstudio.viewer.services;
 
 import android.util.Log;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -47,7 +46,7 @@ public class Fetcher<T> {
      * Fetches the data from URL.
      * @return Fetcher.
      */
-    public Fetcher fetch() {
+    public Fetcher<T> fetch() {
         try {
             BufferedReader in = null;
             try {
@@ -85,11 +84,8 @@ public class Fetcher<T> {
     /**
      * Returns the parsed item from content.
      * @return Items
-     * @throws JSONException for unpredictable situation
      */
-    public List<T> items() throws JSONException {
-        return this.parser.parse(
-            new JSONObject(this.sb.toString())
-        );
+    public List<T> items() {
+        return this.parser.parse(this.sb.toString());
     }
 }
