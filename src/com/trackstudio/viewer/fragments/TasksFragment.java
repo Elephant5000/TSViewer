@@ -4,11 +4,13 @@ import android.app.ListFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.adapters.TaskList;
 import com.trackstudio.viewer.activities.DetailsTask;
 import com.trackstudio.viewer.models.TaskItem;
+import com.trackstudio.viewer.services.TasksUpdater;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -24,6 +26,22 @@ public class TasksFragment extends ListFragment {
         setListAdapter(
             new TaskList(this.getActivity(), this.load())
         );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Button refresh = new Button(getActivity());
+        refresh.setText("Refresh");
+        refresh.setOnClickListener(
+            new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    new TasksUpdater().execute();
+                }
+            }
+        );
+        getListView().addHeaderView(refresh);
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
