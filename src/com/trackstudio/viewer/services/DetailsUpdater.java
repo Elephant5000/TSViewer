@@ -1,8 +1,8 @@
 package com.trackstudio.viewer.services;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.Html;
 import android.util.Log;
@@ -16,18 +16,16 @@ import java.util.List;
 /**
  * Updater for details of task.
  */
-public class DetailsUpdater extends AsyncTask<String, Void, DetailsItem> implements ItemParser<DetailsItem> {
+public class DetailsUpdater implements ItemParser<DetailsItem> {
     /**
      * TAG Logger.
      */
     private static final String TAG = DetailsUpdater.class.getSimpleName();
 
-    private static final String URL_PATTERN = "%s/task/info/%s?login=%s&password=%s";
-
     /**
-     * Details fetcher.
+     * URL pattern. 
      */
-    private final Fetcher<DetailsItem> fetcher;
+    private static final String URL_PATTERN = "%s/task/info/%s?login=%s&password=%s";
 
     /**
      * Name view.
@@ -49,33 +47,21 @@ public class DetailsUpdater extends AsyncTask<String, Void, DetailsItem> impleme
         this.name = name;
         this.description = description;
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.fetcher = new Fetcher<DetailsItem>(
+        new Fetcher<>(
             String.format(
                 URL_PATTERN,
                 prefs.getString("url", ""),
                 number,
                 prefs.getString("username", ""),
                 prefs.getString("password", "")
-                ),
+            ),
             this
-        );
-    }
-
-    @Override
-    protected DetailsItem doInBackground(String... params) {
-        return this.fetcher.fetch().items().iterator().next();
-    }
-
-    @Override
-    protected void onPostExecute(DetailsItem detailsItem) {
-        super.onPostExecute(detailsItem);
-        this.name.setText(detailsItem.getName());
-        this.description.setText(Html.fromHtml(detailsItem.getDescription()));
+        ).fetchForUI();
     }
 
     @Override
     public List<DetailsItem> parse(String json) {
-        final List<DetailsItem> list = new ArrayList<DetailsItem>();
+        final List<DetailsItem> list = new ArrayList<>();
         try {
             JSONObject task = new JSONObject(json);
             list.add(
@@ -88,5 +74,17 @@ public class DetailsUpdater extends AsyncTask<String, Void, DetailsItem> impleme
             Log.e(TAG, "Error parse", ex);
         }
         return list;
+    }
+
+    @Override
+    public void updateUI(String json) {
+        DetailsItem detailsItem = this.parse(json).iterator().next();
+        this.name.setText(detailsItem.getName());
+        this.description.setText(Html.fromHtml(detailsItem.getDescription()));
+    }
+
+    @Override
+    public Context context() {
+        return this.name.getContext();
     }
 }

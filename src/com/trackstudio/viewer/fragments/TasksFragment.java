@@ -9,11 +9,12 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.trackstudio.viewer.R;
-import com.trackstudio.viewer.adapters.TaskList;
 import com.trackstudio.viewer.activities.DetailsTask;
+import com.trackstudio.viewer.adapters.TaskList;
 import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.models.TaskItem;
 import com.trackstudio.viewer.services.TasksUpdater;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class TasksFragment extends ListFragment {
     /**
      * Storage tasks
      */
-    private final List<TaskItem> list = new ArrayList<TaskItem>();
+    private final List<TaskItem> list = new ArrayList<>();
 
     @Override
     public void onCreate(final Bundle icicle) {
@@ -57,7 +58,7 @@ public class TasksFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         DetailsFragment fragment = (DetailsFragment) getFragmentManager().findFragmentById(R.id.details_fragment);
-        final String number = this.list.get(position-1).getNumber();
+        final String number = ((TaskItem) l.getAdapter().getItem(position)).getNumber();
         if (fragment != null && fragment.isVisible()) {
             fragment.updateView(number);
         } else {
@@ -81,7 +82,7 @@ public class TasksFragment extends ListFragment {
                 (ArrayAdapter) this.getListAdapter(),
                 this.list,
                 filter
-            ).execute();
+            );
         } else {
             Toast.makeText(
                 getActivity(),

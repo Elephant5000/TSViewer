@@ -18,7 +18,7 @@ public class NotificationsFragment extends ListFragment {
     /**
      * Storage filters
      */
-    private final List<NotificationItem> list = new ArrayList<NotificationItem>();
+    private final List<NotificationItem> list = new ArrayList<>();
 
     @Override
     public void onCreate(final Bundle icicle) {
@@ -52,6 +52,6 @@ public class NotificationsFragment extends ListFragment {
             getActivity(),
             (ArrayAdapter) this.getListAdapter(),
             this.list
-        ).execute();
+        );
     }
 }

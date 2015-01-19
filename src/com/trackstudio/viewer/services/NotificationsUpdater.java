@@ -1,8 +1,8 @@
 package com.trackstudio.viewer.services;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -11,6 +11,7 @@ import com.trackstudio.viewer.models.NotificationItem;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,7 +21,7 @@ import java.util.Locale;
 /**
  * Notifications updater
  */
-public class NotificationsUpdater extends AsyncTask<String, Void, List<NotificationItem>> implements ItemParser<NotificationItem> {
+public class NotificationsUpdater implements ItemParser<NotificationItem> {
     /**
      * TAG Logger.
      */
@@ -53,11 +54,6 @@ public class NotificationsUpdater extends AsyncTask<String, Void, List<Notificat
     private final ArrayAdapter adapter;
 
     /**
-     * Activity.
-     */
-    private final Activity activity;
-
-    /**
      * Default constructor.
      * @param activity Activity
      * @param adapter Adapter
@@ -66,46 +62,37 @@ public class NotificationsUpdater extends AsyncTask<String, Void, List<Notificat
     public NotificationsUpdater(Activity activity, ArrayAdapter adapter, List<NotificationItem> storage) {
         this.storage = storage;
         this.adapter = adapter;
-        this.activity = activity;
-    }
-
-    @Override
-    protected List<NotificationItem> doInBackground(String... params) {
-        try {
-            final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-            final String url = prefs.getString("url", "");
-            final String login = prefs.getString("username", "");
-            final String password = prefs.getString("password", "");
-            final String sessionId = new Fetcher<String>(
-                String.format(AUTH_URL, url, login, password),
-                ItemParser.DUMMY
-            ).fetch().raw();
-            final String userJson = new Fetcher<String>(
-                String.format(USER_URL, url, login, login, password),
-                ItemParser.DUMMY
-            ).fetch().raw();
-            final String userId = new JSONObject(userJson).getString("id");
-            return new Fetcher<NotificationItem>(
-                String.format(MESSENGER_URL, url, userId, sessionId),
-                this
-            ).fetch().items();
-        } catch (JSONException ex) {
-            Log.e(TAG, "Convert json", ex);
-        }
-        throw new IllegalStateException();
-    }
-
-    @Override
-    protected void onPostExecute(List<NotificationItem> items) {
-        super.onPostExecute(items);
-        storage.clear();
-        storage.addAll(items);
-        adapter.notifyDataSetChanged();
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        final String url = prefs.getString("url", "");
+        final String login = prefs.getString("username", "");
+        final String password = prefs.getString("password", "");
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    super.run();
+                    final String sessionId = new Fetcher<String>(
+                        String.format(AUTH_URL, url, login, password)
+                    ).fetchForText();
+                    final String userJson = new Fetcher<>(
+                        String.format(USER_URL, url, login, login, password),
+                        ItemParser.DUMMY
+                    ).fetchForText();
+                    final String userId = new JSONObject(userJson).getString("id");
+                    new Fetcher<>(
+                        String.format(MESSENGER_URL, url, userId, sessionId),
+                        NotificationsUpdater.this
+                    ).fetchForUI();
+                } catch (JSONException ex) {
+                    Log.e(TAG, "Convert json", ex);
+                }
+            }
+        }.start();
     }
 
     @Override
     public List<NotificationItem> parse(String json) {
-        final List<NotificationItem> list = new ArrayList<NotificationItem>();
+        final List<NotificationItem> list = new ArrayList<>();
         try {
             final JSONArray array = new JSONArray(json);
             final SimpleDateFormat sdf = new SimpleDateFormat(Constrains.TIME_FORMAT, Locale.US);
@@ -123,5 +110,17 @@ public class NotificationsUpdater extends AsyncTask<String, Void, List<Notificat
             Log.e(TAG, "Error parse", ex);
         }
         return list;
+    }
+
+    @Override
+    public void updateUI(final String json) {
+        this.storage.clear();
+        this.storage.addAll(this.parse(json));
+        this.adapter.notifyDataSetChanged(); 
+    }
+
+    @Override
+    public Context context() {
+        return this.adapter.getContext();
     }
 }

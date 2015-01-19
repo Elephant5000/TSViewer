@@ -23,7 +23,7 @@ public class FiltersFragment extends ListFragment {
     /**
      * Storage filters
      */
-    private final List<FilterItem> list = new ArrayList<FilterItem>();
+    private final List<FilterItem> list = new ArrayList<>();
 
     @Override
     public void onCreate(final Bundle icicle) {
@@ -77,6 +77,6 @@ public class FiltersFragment extends ListFragment {
             getActivity(),
             (ArrayAdapter) getListAdapter(),
             list
-        ).execute();
+        );
     }
 }

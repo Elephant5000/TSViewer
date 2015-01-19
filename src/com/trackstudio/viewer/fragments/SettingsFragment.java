@@ -21,7 +21,7 @@ public class SettingsFragment extends PreferenceFragment
 
     @Override
     public void onStart() {
-        super. onStart();
+        super.onStart();
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getActivity());
         prefs.registerOnSharedPreferenceChangeListener(this);
     }

@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:text="Filter"
+        android:text="@string/example_filter"
         android:visibility="gone"/>
     <TextView
         android:id="@+id/date"
@@ -20,14 +20,14 @@
         android:autoLink="web"
         android:focusable="false"
         android:linksClickable="true"
-        android:text="10.10.10 11:11"
+        android:text="@string/example_time"
         android:textAppearance="?android:attr/textAppearanceSmall"/>
     <TextView android:id="@+id/text"
               android:layout_width="match_parent" android:layout_height="wrap_content"
               android:autoLink="web"
               android:focusable="false"
               android:linksClickable="true"
-              android:text="Notification"
+              android:text="@string/example_name_notification"
               android:layout_below="@+id/date"
               android:layout_alignParentLeft="true"
               android:layout_alignParentStart="true"

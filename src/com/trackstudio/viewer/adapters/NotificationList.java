@@ -1,7 +1,6 @@
 package com.trackstudio.viewer.adapters;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,10 +15,6 @@ import java.util.List;
  * Filter list adapter.
  */
 public class NotificationList extends ArrayAdapter<NotificationItem> {
-    /**
-     * Context.
-     */
-    private final Context context;
 
     /**
      * Default constructor.
@@ -28,14 +23,13 @@ public class NotificationList extends ArrayAdapter<NotificationItem> {
      */
     public NotificationList(final Activity context, final List<NotificationItem> items) {
         super(context, R.layout.notifications_fragment, items);
-        this.context = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
-            LayoutInflater inflater = LayoutInflater.from(this.context);
+            LayoutInflater inflater = LayoutInflater.from(this.getContext());
             convertView = inflater.inflate(R.layout.notifications_fragment, parent, false);
             viewHolder = this.initConvertView(convertView);
         } else {

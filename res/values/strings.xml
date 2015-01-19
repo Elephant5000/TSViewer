@@ -10,4 +10,12 @@
     <string name="url">URL</string>
     <string name="period">Period</string>
     <string name="parent_task">Parent task</string>
+    <string name="example_view_task">Android just became the #1 OS on the planet. Take that, Microsoft!
+        http://t.co/123
+    </string>
+    <string name="example_view_name">Task #1</string>
+    <string name="example_filter">Filter</string>
+    <string name="example_time">10.10.10 11:11</string>
+    <string name="example_name_notification">Notification</string>
+    <string name="example_submitter">Admin</string>
 </resources>

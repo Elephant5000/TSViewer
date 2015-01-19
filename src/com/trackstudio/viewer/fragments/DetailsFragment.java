@@ -52,7 +52,7 @@ public class DetailsFragment extends Fragment {
                 this.name,
                 this.description,
                 number
-            ).execute();
+            );
         } else {
             Toast.makeText(
                 getActivity(),

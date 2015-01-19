@@ -1,8 +1,8 @@
 package com.trackstudio.viewer.services;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +23,7 @@ import java.util.Locale;
 /**
  * Tasks service updater.
  */
-public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implements ItemParser<TaskItem> {
+public class TasksUpdater implements ItemParser<TaskItem> {
     /**
      * TAG for logger.
      */
@@ -31,11 +33,6 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
      * URL Pattern.
      */
     private final static String URL_PATTERN =  "%s/task/tasks/%s?filter=%s&login=%s&password=%s";
-
-    /**
-     * Tasks fetcher.
-     */
-    private final Fetcher<TaskItem> fetcher;
 
     /**
      * Storage of tasks item.
@@ -56,37 +53,28 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
      */
     public TasksUpdater(Activity activity, ArrayAdapter adapter, List<TaskItem> storage, String filter) {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-        this.fetcher = new Fetcher<TaskItem>(
-            String.format(
-                URL_PATTERN,
-                prefs.getString("url", ""),
-                prefs.getString("parent_task", ""),
-                filter,
-                prefs.getString("username", ""),
-                prefs.getString("password", "")
-            ),
-            this
-        );
         this.storage = storage;
         this.adapter = adapter;
-    }
-
-    @Override
-    protected List<TaskItem> doInBackground(String... params) {
-        return this.fetcher.fetch().items();
-    }
-
-    @Override
-    protected void onPostExecute(List<TaskItem> items) {
-        super.onPostExecute(items);
-        storage.clear();
-        storage.addAll(items);
-        adapter.notifyDataSetChanged();
+        try {
+            new Fetcher<>(
+                String.format(
+                    URL_PATTERN,
+                    prefs.getString("url", ""),
+                    prefs.getString("parent_task", ""),
+                    URLEncoder.encode(filter, "UTF-8"),
+                    prefs.getString("username", ""),
+                    prefs.getString("password", "")
+                ),
+                this
+            ).fetchForUI();
+        } catch (final UnsupportedEncodingException ex) {
+            Log.e(TAG, "Error encoding", ex);
+        }
     }
 
     @Override
     public List<TaskItem> parse(String json) {
-        final List<TaskItem> list = new ArrayList<TaskItem>();
+        final List<TaskItem> list = new ArrayList<>();
         try {
             final JSONArray array = new JSONArray(json);
             final SimpleDateFormat sdf = new SimpleDateFormat(Constrains.TIME_FORMAT, Locale.US);
@@ -105,5 +93,17 @@ public class TasksUpdater extends AsyncTask<String, Void, List<TaskItem>> implem
             Log.e(TAG, "Error parse", ex);
         }
         return list;
+    }
+
+    @Override
+    public void updateUI(final String json) {
+        storage.clear();
+        storage.addAll(this.parse(json));
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public Context context() {
+        return this.adapter.getContext();
     }
 }

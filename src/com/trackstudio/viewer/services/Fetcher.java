@@ -1,12 +1,18 @@
 package com.trackstudio.viewer.services;
 
 import android.util.Log;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.util.List;
 
 /**
  * This class is used for fetching data from URL.
@@ -23,14 +29,18 @@ public class Fetcher<T> {
     private final String url;
 
     /**
-     * Result.
-     */
-    private final StringBuilder sb = new StringBuilder();
-
-    /**
      * Parser.
      */
     private final ItemParser<T> parser;
+
+    /**
+     * Constructor for fetching text
+     * @param url URL
+     */
+    public Fetcher(final String url) {
+        this.url = url;
+        this.parser = null;
+    }
 
     /**
      * Default constructor.
@@ -44,9 +54,37 @@ public class Fetcher<T> {
 
     /**
      * Fetches the data from URL.
-     * @return Fetcher.
      */
-    public Fetcher<T> fetch() {
+    public void fetchForUI() {
+        RequestQueue queue = Volley.newRequestQueue(this.parser.context());
+        StringRequest stringRequest = new StringRequest(
+            Request.Method.GET, this.url,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String json) {
+                    Fetcher.this.parser.updateUI(json);
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e(
+                        TAG,
+                        String.format("Error in fetching : %s", Fetcher.this.url),
+                        error
+                    );
+                }
+            }
+        );
+        queue.add(stringRequest);
+    }
+
+    /**
+     * Fetch the pure text.
+     * @return String
+     */
+    public String fetchForText() {
+        final StringBuilder sb = new StringBuilder();
         try {
             BufferedReader in = null;
             try {
@@ -72,22 +110,6 @@ public class Fetcher<T> {
                 ex
             );
         }
-        return this;
-    }
-
-    /**
-     * Get raw text from URL.
-     * @return RAW Content
-     */
-    public String raw() {
-        return this.sb.toString();
-    }
-
-    /**
-     * Returns the parsed item from content.
-     * @return Items
-     */
-    public List<T> items() {
-        return this.parser.parse(this.sb.toString());
+        return sb.toString();
     }
 }
