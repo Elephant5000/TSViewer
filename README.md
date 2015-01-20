@@ -1,5 +1,7 @@
 # TSViewer
-It is the android client for TrackStudio system
+It is the android client for [TrackStudio](http://trackstudio.com/) system.
+
+The app uses the REST API for communications with service side.
 
 The app has the 5 screens.
 
