@@ -1,6 +1,7 @@
 package com.trackstudio.viewer.adapters;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +35,11 @@ public class TaskList extends ArrayAdapter<TaskItem> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         this.updateTaskItem(viewHolder, position);
+        if (position % 2 == 0) {
+            convertView.setBackgroundColor(Color.rgb(245, 245, 245));
+        } else {
+            convertView.setBackgroundColor(Color.rgb(238, 236, 243));
+        }
         return convertView;
     }
 
