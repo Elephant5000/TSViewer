@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 import com.trackstudio.viewer.R;
@@ -37,22 +36,13 @@ public class TasksFragment extends ListFragment {
     }
 
     @Override
-    public void onViewCreated(View view, Bundle bundle) {
-        final Button refresh = new Button(getActivity());
-        refresh.setText("Refresh");
-        final String filter = getActivity()
-            .getIntent()
-            .getStringExtra(Constrains.FILTER);
-        refresh.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    TasksFragment.this.updateUI(filter);
-                }
-            }
+    public void onResume() {
+        super.onResume();
+        this.updateUI(
+            getActivity()
+                .getIntent()
+                .getStringExtra(Constrains.FILTER)
         );
-        getListView().addHeaderView(refresh);
-        this.updateUI(filter);
     }
 
     @Override

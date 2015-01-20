@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import com.trackstudio.viewer.R;
 import com.trackstudio.viewer.activities.TSViewer;
@@ -13,6 +12,7 @@ import com.trackstudio.viewer.adapters.FilterList;
 import com.trackstudio.viewer.models.Constrains;
 import com.trackstudio.viewer.models.FilterItem;
 import com.trackstudio.viewer.services.FiltersUpdater;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,24 +36,13 @@ public class FiltersFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
-        final Button refresh = new Button(getActivity());
-        refresh.setText("Refresh");
-        refresh.setOnClickListener(
-            new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    FiltersFragment.this.updateUI();
-                }
-            }
-        );
-        getListView().addHeaderView(refresh);
         this.updateUI();
     }
 
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         final TasksFragment fragment = (TasksFragment) this.getFragmentManager().findFragmentById(R.id.fragment_tasks);
-        final String filter = this.list.get(position-1).getName();
+        final String filter = ((FilterItem) l.getAdapter().getItem(position)).getName();
         if (fragment != null && fragment.isVisible()) {
             fragment.updateUI(filter);
         } else {
@@ -72,7 +61,7 @@ public class FiltersFragment extends ListFragment {
     /**
      * Updates the UI by Async thread.
      */
-    private void updateUI() {
+    public void updateUI() {
         new FiltersUpdater(
             getActivity(),
             (ArrayAdapter) getListAdapter(),

@@ -18,4 +18,5 @@
     <string name="example_time">10.10.10 11:11</string>
     <string name="example_name_notification">Notification</string>
     <string name="example_submitter">Admin</string>
+    <string name="refresh">Refresh</string>
 </resources>
